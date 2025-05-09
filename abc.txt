@@ -1,0 +1,210 @@
+<!-- New code start -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Initialize cart quantities from current cart
+  fetch('/cart.js')
+    .then(response => response.json())
+    .then(cart => {
+      cart.items.forEach(item => {
+        const quantityInput = document.getElementById('quantity-' + item.product_id);
+        if (quantityInput) {
+          quantityInput.value = item.quantity;
+        }
+      });
+      updateCartCount(cart.item_count);
+    });
+
+  // Handle Add to Cart button
+  document.querySelectorAll('.add-to-cart').forEach(function (button) {
+    button.addEventListener('click', function () {
+      const productId = this.getAttribute('data-product-id');
+      const quantity = parseInt(document.getElementById('quantity-' + productId).value, 10);
+      const variantId = document.getElementById('variant-' + productId).value;
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: variantId, quantity: quantity })
+      })
+        .then(response => response.json())
+        .then(data => {
+          updateCartCount(data.item_count);
+          openCartDrawer(); // ← open the cart drawer after adding
+        })
+        .catch(error => console.error('Add to cart error:', error));
+    });
+  });
+});
+
+// Update quantity with + and - buttons
+function updateQuantity(productId, amount) {
+  const quantityInput = document.getElementById('quantity-' + productId);
+  const currentQuantity = parseInt(quantityInput.value, 10);
+  const newQuantity = currentQuantity + amount;
+
+  if (newQuantity >= 1) {
+    quantityInput.value = newQuantity;
+    updateCart(productId, newQuantity);
+  }
+}
+
+// Update cart item quantity
+function updateCart(productId, newQuantity) {
+  const variantId = document.getElementById('variant-' + productId).value;
+  const data = { updates: {} };
+  data.updates[variantId] = newQuantity;
+
+  fetch('/cart/update.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+    .then(response => response.json())
+    .then(data => {
+      updateCartCount(data.item_count);
+      openCartDrawer(); // ← refresh drawer
+    })
+    .catch(error => console.error('Update cart error:', error));
+}
+
+// Update cart count bubble
+function updateCartCount(count) {
+  const cartCountBubble = document.querySelector('.cart-count-bubble span[aria-hidden="true"]');
+  if (cartCountBubble) {
+    cartCountBubble.textContent = count;
+  }
+}
+
+// Open and reload the cart drawer contents (Dawn specific)
+function openCartDrawer() {
+  fetch(window.Shopify.routes.root + 'cart')
+    .then(res => res.text())
+    .then(cartHTML => {
+      const cartDocument = new DOMParser().parseFromString(cartHTML, 'text/html');
+      const newCartDrawer = cartDocument.querySelector('cart-drawer');
+
+      if (newCartDrawer) {
+        let existingDrawer = document.querySelector('cart-drawer');
+
+        if (!existingDrawer) {
+          // Drawer doesn't exist, so we inject it into body
+          existingDrawer = document.createElement('cart-drawer');
+          document.body.appendChild(existingDrawer);
+        }
+
+        existingDrawer.innerHTML = newCartDrawer.innerHTML;
+        existingDrawer.classList.add('active');
+        document.body.classList.add('overflow-hidden'); // prevent background scroll
+      }
+    });
+}
+</script>
+
+
+<!-- New code end -->
+
+
+<!-- New code start -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Initialize cart quantities from current cart
+  fetch('/cart.js')
+    .then(response => response.json())
+    .then(cart => {
+      cart.items.forEach(item => {
+        const quantityInput = document.getElementById('quantity-' + item.product_id);
+        if (quantityInput) {
+          quantityInput.value = item.quantity;
+        }
+      });
+      updateCartCount(cart.item_count);
+    });
+
+  // Handle Add to Cart button
+  document.querySelectorAll('.add-to-cart').forEach(function (button) {
+    button.addEventListener('click', function () {
+      const productId = this.getAttribute('data-product-id');
+      const quantity = parseInt(document.getElementById('quantity-' + productId).value, 10);
+      const variantId = document.getElementById('variant-' + productId).value;
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: variantId, quantity: quantity })
+      })
+        .then(response => response.json())
+        .then(data => {
+          updateCartCount(data.item_count);
+          openCartDrawer(); // ← open the cart drawer after adding
+        })
+        .catch(error => console.error('Add to cart error:', error));
+    });
+  });
+});
+
+// Update quantity with + and - buttons
+function updateQuantity(productId, amount) {
+  const quantityInput = document.getElementById('quantity-' + productId);
+  const currentQuantity = parseInt(quantityInput.value, 10);
+  const newQuantity = currentQuantity + amount;
+
+  if (newQuantity >= 1) {
+    quantityInput.value = newQuantity;
+    updateCart(productId, newQuantity);
+  }
+}
+
+// Update cart item quantity
+function updateCart(productId, newQuantity) {
+  const variantId = document.getElementById('variant-' + productId).value;
+  const data = { updates: {} };
+  data.updates[variantId] = newQuantity;
+
+  fetch('/cart/update.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+    .then(response => response.json())
+    .then(data => {
+      updateCartCount(data.item_count);
+      openCartDrawer(); // ← refresh drawer
+    })
+    .catch(error => console.error('Update cart error:', error));
+}
+
+// Update cart count bubble
+function updateCartCount(count) {
+  const cartCountBubble = document.querySelector('.cart-count-bubble span[aria-hidden="true"]');
+  if (cartCountBubble) {
+    cartCountBubble.textContent = count;
+  }
+}
+
+// Open and reload the cart drawer contents (Dawn specific)
+function openCartDrawer() {
+  fetch(window.Shopify.routes.root + 'cart')
+    .then(res => res.text())
+    .then(cartHTML => {
+      const cartDocument = new DOMParser().parseFromString(cartHTML, 'text/html');
+      const newCartDrawer = cartDocument.querySelector('cart-drawer');
+
+      if (newCartDrawer) {
+        let existingDrawer = document.querySelector('cart-drawer');
+
+        if (!existingDrawer) {
+          // Drawer doesn't exist, so we inject it into body
+          existingDrawer = document.createElement('cart-drawer');
+          document.body.appendChild(existingDrawer);
+        }
+
+        existingDrawer.innerHTML = newCartDrawer.innerHTML;
+        existingDrawer.classList.add('active');
+        document.body.classList.add('overflow-hidden'); // prevent background scroll
+      }
+    });
+}
+</script>
+
+
+<!-- New code end -->
