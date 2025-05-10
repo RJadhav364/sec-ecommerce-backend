@@ -7,17 +7,14 @@ const Schema = mongoose.Schema;
 const productScheme = new Schema({
     productName: {
         type: String,
-        required: true, 
+        required: true,
+        unique: true
     },
     productOldPrice: {
         type: String,
         required: true, 
     },
     productCurrentPrice: {
-        type: String,
-        required: true, 
-    },
-    productRating: {
         type: String,
         required: true, 
     },
@@ -32,6 +29,10 @@ const productScheme = new Schema({
     productBrand: {
         type: String,
         required: true, 
+    },
+    productImages: {
+        type: [String],
+        required: true,
     },
 });
 

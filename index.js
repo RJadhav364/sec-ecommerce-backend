@@ -2,6 +2,8 @@ import express from "express"
 import connectionMongoDB from "./connection.js";
 import productController from "./routes/ProductRoutes.js";
 import cors from "cors"
+import categoryController from "./routes/CategoryRoutes.js";
+import subCategoryController from "./routes/SubCategoryRoutes.js";
 
 const app = express();
 const PORT = 9000;
@@ -16,6 +18,8 @@ var corsOptions = {
     optionsSuccessStatus: 200  // Some legacy browsers choke on 204
 };
 app.use("/product", productController)
+app.use("/category", categoryController)
+app.use("/sub-category", subCategoryController)
 app.listen(PORT, () => {
     console.log(`app is running on PORT ${PORT}`);
 })
