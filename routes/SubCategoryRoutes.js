@@ -1,9 +1,9 @@
 import express from "express"
-import { createNewSubCategory } from "../controllers/SubCategoryController.js"
+import { createNewSubCategory, getallSubCategories } from "../controllers/SubCategoryController.js"
 
 const subCategoryController = express.Router();
 
 subCategoryController.post("/new-sub-category", createNewSubCategory);
-// categoryController.get("/get-all-products", getallProduts);
+subCategoryController.get("/get-all-sub-categories", getallSubCategories);
 
 export default subCategoryController;

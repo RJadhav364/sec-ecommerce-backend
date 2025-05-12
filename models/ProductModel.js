@@ -34,6 +34,11 @@ const productScheme = new Schema({
         type: [String],
         required: true,
     },
+    categoryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "category",
+        required: true,
+    }
 });
 
 
