@@ -31,8 +31,8 @@ const productScheme = new Schema({
         required: true, 
     },
     productImages: {
-        type: [String],
-        required: true,
+        data: {type: String},
+        contentType:String,
     },
     categoryId: {
         type: mongoose.Schema.Types.ObjectId,
