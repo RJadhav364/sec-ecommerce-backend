@@ -10,10 +10,10 @@ const createNewProduct = async(req,res) => {
         const file = req.files.productImages;
         const contentType = file.type;
         const imageBuffer = fs.readFileSync(file.path);
-        const base64Image = imageBuffer.toString('base64');
-        const finalImageUrl = `data:${contentType};base64,${base64Image}`
-        finalObj = {productImages: {data: finalImageUrl, contentType: contentType}, ...newProductObj}
-        console.log(finalObj);
+        // const base64Image = imageBuffer.toString('base64');
+        // const finalImageUrl = `data:${contentType};base64,${base64Image}`
+        finalObj = {productImages: {data: imageBuffer, contentType: contentType}, ...newProductObj}
+        // console.log(finalObj);
         const result = await productModel.create(finalObj);
         // const newRegistration = new productModel(finalObj);
         // await newRegistration.save();
@@ -61,13 +61,13 @@ const getallProduts = async(req,res) => {
 
 // to get image of product
 const getProductImage = async(req,res) => {
-    console.log(req.params)
+    // console.log(req.params)
     try {
         const product = await productModel.findById(req.params.id).select('productImages');
-        // console.log(product.productImages.data);
+        // console.log(product);
 
         if(product.productImages.data){
-            // res.set('Content-Type',product.productImages.contentType)
+            res.set('Content-Type',product.productImages.contentType)
             return res.status(200).send(product.productImages.data)
         } else{
             res.status(404).send('Image not found');

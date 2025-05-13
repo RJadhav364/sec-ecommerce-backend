@@ -31,7 +31,7 @@ const productScheme = new Schema({
         required: true, 
     },
     productImages: {
-        data: {type: String},
+        data: Buffer,
         contentType:String,
     },
     categoryId: {
