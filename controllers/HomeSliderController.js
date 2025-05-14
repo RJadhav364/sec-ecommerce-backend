@@ -17,7 +17,7 @@ const uploadNewSliderImg = async(req,res) => {
         res.status(200).send({message: "Home slider image uploaded"})
     } catch (error) {
         console.log(error)
-        ressend({message: "error occured", error})
+        res.send({message: "error occured", error})
     }
 }
 
@@ -29,7 +29,7 @@ const getAllImageSlider = async(req,res) => {
     res.status(200).send({message: "Gett all Images", allImages})
     } catch (error) {
         console.log(error)
-        ressend({message: "error occured", error})
+        res.send({message: "error occured", error})
     }
 }
 

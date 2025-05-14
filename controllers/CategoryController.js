@@ -1,14 +1,18 @@
 import "../config/dotenv.js";
 import categoryModel from "../models/CategoryModel.js"
 import subCategoryModel from "../models/SubCategoryModel.js";
-
+import fs from "fs"
 
 const createNewCategory = async(req,res) => {
     try {
-        const newCategory = await categoryModel.create(req.body);
-        res.status(200).send({message: "new category created", newCategory});
+        let finalObj;
+        const contentType = req.files.categoryImage.type;
+        const imageBuffer = fs.readFileSync(req.files.categoryImage.path);
+        finalObj = {categoryImage: {data: imageBuffer, contentType: contentType}, ...req.fields}
+        const newCategory = await categoryModel.create(finalObj);
+        res.status(200).send({message: "new category created"});
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         switch(true){
             case error.errorResponse.keyPattern.categoryName == 1:
                 res.status(409).send({message: "Category name already exist" });
@@ -23,7 +27,7 @@ const getallCategories = async(req,res) => {
     let assignedCategoryData;
     try {
         // console.log("HI", req.body)
-        const allCategoriesList = await categoryModel.find({});
+        const allCategoriesList = await categoryModel.find({}).select("-categoryImage");
         assignedCategory = await subCategoryModel.find({});
         passedData = allCategoriesList.map(({_id,categoryName,categoryImage,createdAt,updatedAt}) => {
            assignedCategoryData = assignedCategory.filter((value) =>  value.parentCategory.equals(_id));
@@ -44,5 +48,24 @@ const getallCategories = async(req,res) => {
     }
 }
 
+// get category image
+const getCategoryImage = async(req,res) => {
+    // console.log(req.params)
+    try {
+        const product = await categoryModel.findById(req.params.id).select('categoryImage');
+        // console.log(product);
 
-export {createNewCategory, getallCategories}
+        if(product.categoryImage.data){
+            res.set('Content-Type',product.categoryImage.contentType)
+            return res.status(200).send(product.categoryImage.data)
+        } else{
+            res.status(404).send('Image not found');
+        }
+    } catch (error) {
+        console.log(error)
+        res.send({message: "error occured", error})
+    }
+}
+
+
+export {createNewCategory, getallCategories, getCategoryImage}

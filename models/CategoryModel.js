@@ -10,8 +10,8 @@ const categorySchema = new Schema({
         unique: true
     },
     categoryImage: {
-        type: String,
-        required: true,
+        data: Buffer,
+        contentType:String,
     },
 },
 { timestamps: true }

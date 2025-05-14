@@ -17,7 +17,7 @@ const createNewProduct = async(req,res) => {
         const result = await productModel.create(finalObj);
         // const newRegistration = new productModel(finalObj);
         // await newRegistration.save();
-        res.status(200).send({message: "HI, THIS API TO TEST GIT FLOW",result})
+        res.status(200).send({message: "HI, THIS API TO TEST GIT FLOW"})
     } catch (error) {
         console.log(error)
         switch(true){
@@ -55,7 +55,7 @@ const getallProduts = async(req,res) => {
         res.status(200).send({message: "HI, THIS API TO TEST GIT FLOW", passedData})
     } catch (error) {
         console.log(error)
-        ressend({message: "error occured", error})
+        res.send({message: "error occured", error})
     }
 }
 
@@ -74,7 +74,7 @@ const getProductImage = async(req,res) => {
         }
     } catch (error) {
         console.log(error)
-        ressend({message: "error occured", error})
+        res.send({message: "error occured", error})
     }
 }
 
