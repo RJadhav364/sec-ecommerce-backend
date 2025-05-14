@@ -5,8 +5,8 @@ const Schema =  mongoose.Schema;
 
 const homeSliderSchema = new Schema({
     homeSliderImage: {
-        data: Buffer,
-        required: true,
+        type: String,
+        contentType:String,
     },
 },
 { timestamps: true }

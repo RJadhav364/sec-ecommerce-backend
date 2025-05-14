@@ -5,6 +5,7 @@ import productController from "./routes/ProductRoutes.js";
 import cors from "cors"
 import categoryController from "./routes/CategoryRoutes.js";
 import subCategoryController from "./routes/SubCategoryRoutes.js";
+import homeSliderController from "./routes/HomeSliderRoute.js";
 
 const app = express();
 const PORT = 9000;
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/product", productController)
 app.use("/category", categoryController)
 app.use("/sub-category", subCategoryController)
+app.use("/slider", homeSliderController)
 app.listen(PORT, () => {
     console.log(`app is running on PORT ${PORT}`);
 })
