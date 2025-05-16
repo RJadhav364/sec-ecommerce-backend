@@ -6,17 +6,26 @@ const createNewProduct = async(req,res) => {
     try {
         let newProductObj = req.fields;
         let finalObj;
-        // console.log(newProductObj)
-        const file = req.files.productImages;
-        const contentType = file.type;
-        const imageBuffer = fs.readFileSync(file.path);
-        // const base64Image = imageBuffer.toString('base64');
-        // const finalImageUrl = `data:${contentType};base64,${base64Image}`
-        finalObj = {productImages: {data: imageBuffer, contentType: contentType}, ...newProductObj}
-        // console.log(finalObj);
+        let productImagesArray = [];
+        const files = req.files.productImages;
+        // const contentType = file.type;
+        // const imageBuffer = fs.readFileSync(file.path);
+        const imagesArray = Array.isArray(files) ? files : [files];
+        imagesArray.forEach(file => {
+            const contentType = file.type; // depending on your Formidable version
+            const imageBuffer = fs.readFileSync(file.path); // filepath in latest Formidable
+
+            productImagesArray.push({
+                data: imageBuffer,
+                contentType: contentType,
+            });
+        });
+        // finalObj = {productImages: {data: imageBuffer, contentType: contentType}, ...newProductObj}
+        finalObj = {
+            productImages: productImagesArray,
+            ...newProductObj,
+        };
         const result = await productModel.create(finalObj);
-        // const newRegistration = new productModel(finalObj);
-        // await newRegistration.save();
         res.status(200).send({message: "HI, THIS API TO TEST GIT FLOW"})
     } catch (error) {
         console.log(error)
@@ -32,10 +41,10 @@ const getallProduts = async(req,res) => {
     let categoryList;
     let assignedCategoryData;
     try {
-        // console.log("HI", req.body)
-        const newRegistration = await productModel.find({}).select('-productImages');
+        console.log("HI", req.params.id)
+        const newRegistration = await productModel.find(req.params.id).select('-productImages');
         // console.log(newRegistration)
-        categoryList = await categoryModel.find({});
+        categoryList = await categoryModel.find({}).select('-categoryImage');
         let passedData = newRegistration.map(({_id,productName,productOldPrice,productCurrentPrice,productRating,productInStock,productBrand,productImages,categoryId}) => {
             assignedCategoryData = categoryList.find(value =>  value._id.equals(categoryId));
             return {
@@ -60,23 +69,24 @@ const getallProduts = async(req,res) => {
 }
 
 // to get image of product
-const getProductImage = async(req,res) => {
-    // console.log(req.params)
-    try {
-        const product = await productModel.findById(req.params.id).select('productImages');
-        // console.log(product);
+const getProductImage = async (req, res) => {
+  const { id, index } = req.params;
 
-        if(product.productImages.data){
-            res.set('Content-Type',product.productImages.contentType)
-            return res.status(200).send(product.productImages.data)
-        } else{
-            res.status(404).send('Image not found');
-        }
-    } catch (error) {
-        console.log(error)
-        res.send({message: "error occured", error})
+  try {
+    const product = await productModel.findById(id).select('productImages');
+
+    if (product && product.productImages.length > index) {
+      const image = product.productImages[index];
+      res.set('Content-Type', image.contentType);
+      return res.status(200).send(image.data);
+    } else {
+      return res.status(404).send('Image not found');
     }
-}
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Error occurred', error });
+  }
+};
 
 
 export {createNewProduct, getallProduts,getProductImage}

@@ -30,14 +30,23 @@ const productScheme = new Schema({
         type: String,
         required: true, 
     },
-    productImages: {
+    productImages: [{
+        _id: false,
         data: Buffer,
         contentType:String,
-    },
+    }],
     categoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "category",
         required: true,
+    },
+    isFeatured: {
+        type: Boolean,
+        required: true, 
+    },
+    isPopular: {
+        type: Boolean,
+        required: true, 
     }
 });
 
