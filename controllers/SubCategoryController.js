@@ -5,9 +5,10 @@ import subCategoryModel from "../models/SubCategoryModel.js";
 const createNewSubCategory = async(req,res) => {
     try {
         // console.log(req.body)
-        const newSubCategory = await subCategoryModel.create(req.body);
+        const newSubCategory = await subCategoryModel.create(req.fields);
         res.status(200).send({message: "new category created", newSubCategory});
     } catch (error) {
+        console.log(error)
         switch(true){
             case error.errorResponse.keyPattern.subCategoryName == 1:
                 res.status(409).send({message: "Sub Category name already exist" });

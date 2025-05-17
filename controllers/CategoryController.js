@@ -2,6 +2,7 @@ import "../config/dotenv.js";
 import categoryModel from "../models/CategoryModel.js"
 import subCategoryModel from "../models/SubCategoryModel.js";
 import fs from "fs"
+import thirdLevelCategoryModel from "../models/ThirdLevelCategoryModel.js";
 
 const createNewCategory = async(req,res) => {
     try {
@@ -25,13 +26,17 @@ const getallCategories = async(req,res) => {
     let passedData;
     let assignedCategory;
     let assignedCategoryData;
+    let assignedThirdLevelData;
     try {
         // console.log("HI", req.body)
         const allCategoriesList = await categoryModel.find({}).select("-categoryImage");
         assignedCategory = await subCategoryModel.find({});
+        const allhirdLevelList = await thirdLevelCategoryModel.find({});
+        // console.log(allhirdLevelList)
         passedData = allCategoriesList.map(({_id,categoryName,categoryImage,createdAt,updatedAt}) => {
            assignedCategoryData = assignedCategory.filter((value) =>  value.parentCategory.equals(_id));
-        //    console.log("assignedCategory",assignedCategoryData ,value.parentCategory == _id)
+            //   console.log("assignedThirdLevelData",assignedCategoryData._id)
+           assignedThirdLevelData = allhirdLevelList.filter((result) => result.subCategory.equals(assignedCategoryData._id));
            return {
             id: _id,
             categoryName,
@@ -39,7 +44,16 @@ const getallCategories = async(req,res) => {
             createdAt,
             updatedAt,
             subNavbar: assignedCategoryData.length > 0 ? true : false,
-            children: assignedCategoryData
+            children: assignedCategoryData.map(({_id,subCategoryName,parentCategory,createdAt,updatedAt}) => {
+                return {
+                    id: _id,
+                    subCategoryName,
+                    parentCategory,
+                    createdAt,
+                    updatedAt,
+                    children: allhirdLevelList.filter((result) => result.subCategory.equals(_id))
+                }
+            })
            }
         })
         res.status(200).send({message: "Get all categories", passedData})
