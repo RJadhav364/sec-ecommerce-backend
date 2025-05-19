@@ -17,4 +17,13 @@ const createNewThirdLevelCategory = async(req,res) => {
     }
 }
 
-export {createNewThirdLevelCategory}
+const getThirdCategories = async(req,res) => {
+    try {
+        const data = await thirdLevelCategoryModel.find({});
+        res.status(200).send({message: "Third Level Catgories Fetch", data})
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export {createNewThirdLevelCategory, getThirdCategories}

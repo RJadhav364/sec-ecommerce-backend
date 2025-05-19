@@ -26,7 +26,7 @@ const getallCategories = async(req,res) => {
     let passedData;
     let assignedCategory;
     let assignedCategoryData;
-    let assignedThirdLevelData;
+    // let assignedThirdLevelData;
     try {
         // console.log("HI", req.body)
         const allCategoriesList = await categoryModel.find({}).select("-categoryImage");
@@ -36,7 +36,7 @@ const getallCategories = async(req,res) => {
         passedData = allCategoriesList.map(({_id,categoryName,categoryImage,createdAt,updatedAt}) => {
            assignedCategoryData = assignedCategory.filter((value) =>  value.parentCategory.equals(_id));
             //   console.log("assignedThirdLevelData",assignedCategoryData._id)
-           assignedThirdLevelData = allhirdLevelList.filter((result) => result.subCategory.equals(assignedCategoryData._id));
+        //    assignedThirdLevelData = allhirdLevelList.filter((result) => result.subCategory.equals(assignedCategoryData._id));
            return {
             id: _id,
             categoryName,

@@ -40,12 +40,22 @@ const createNewProduct = async(req,res) => {
 const getallProduts = async(req,res) => {
     let categoryList;
     let assignedCategoryData;
+    let params;
+    let filterKey;
+    let filterId;
+    let thirdLevelCategory;
     try {
-        console.log("HI", req.params.id)
-        const newRegistration = await productModel.find(req.params.id).select('-productImages');
+        // console.log("HI", req.params.id);
+        params = req.params.id;
+        params = params.split("=");
+        // console.log(params)
+        filterKey = params[0];
+        filterId = params[1]
+        // console.log(filterId)
+        const newRegistration = await productModel.find({[filterKey]:filterId}).select('-productImages');
         // console.log(newRegistration)
         categoryList = await categoryModel.find({}).select('-categoryImage');
-        let passedData = newRegistration.map(({_id,productName,productOldPrice,productCurrentPrice,productRating,productInStock,productBrand,productImages,categoryId}) => {
+        let passedData = newRegistration.map(({_id,productName,productOldPrice,productCurrentPrice,productRating,productInStock,productBrand,productImages,categoryId,productDiscount}) => {
             assignedCategoryData = categoryList.find(value =>  value._id.equals(categoryId));
             return {
                 id: _id,
@@ -53,6 +63,7 @@ const getallProduts = async(req,res) => {
                 productOldPrice,
                 productCurrentPrice,
                 productRating,
+                productDiscount,
                 productInStock,
                 productBrand,
                 productImages,

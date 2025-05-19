@@ -22,6 +22,10 @@ const productScheme = new Schema({
         type: String,
         required: true, 
     },
+    productDiscount: {
+        type: String,
+        required: true, 
+    },
     productInStock: {
         type: Boolean,
         required: true, 
@@ -38,6 +42,16 @@ const productScheme = new Schema({
     categoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "category",
+        required: true,
+    },
+    subCategoryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "subcategory",
+        required: true,
+    },
+    thirdLevelcategoryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "thirdlevelcategory",
         required: true,
     },
     isFeatured: {
