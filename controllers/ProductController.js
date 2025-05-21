@@ -99,5 +99,15 @@ const getProductImage = async (req, res) => {
   }
 };
 
+const getParticularProduct = async(req,res) => {
+    try {
+        const productId = req.params.id;
+        const data = await productModel.findById({_id: productId }).select("-productImages");
+        res.status(200).send({message: "Product fetch successfullu", data})
+    } catch (error) {
+        console.log(error);
+    }
+}
 
-export {createNewProduct, getallProduts,getProductImage}
+
+export {createNewProduct, getallProduts,getProductImage,getParticularProduct}
