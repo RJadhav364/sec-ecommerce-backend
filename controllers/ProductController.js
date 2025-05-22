@@ -101,8 +101,22 @@ const getProductImage = async (req, res) => {
 
 const getParticularProduct = async(req,res) => {
     try {
+        let productImagesArray = [];
+        let contentType;
+        let base64Image;
         const productId = req.params.id;
-        const data = await productModel.findById({_id: productId }).select("-productImages");
+        const productData = await productModel.findById({_id: productId }).lean();
+        // const data = await productModel.findById({_id: productId }).select("-productImages");
+        // console.log(data.productImages)
+        const images = productData.productImages.map(({data,contentType},index) => {
+            // contentType = imageObj.contentType;
+            base64Image = data.toString('base64');
+            return `data:${contentType};base64,${base64Image}`;
+        })
+        const {productImages, ...restValues} = productData;
+        // console.log("restValues",restValues);
+        const data = {images, ...restValues}
+        // console.log(abc.length)
         res.status(200).send({message: "Product fetch successfullu", data})
     } catch (error) {
         console.log(error);
