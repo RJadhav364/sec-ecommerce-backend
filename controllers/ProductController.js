@@ -55,7 +55,7 @@ const getallProduts = async(req,res) => {
         const newRegistration = await productModel.find({[filterKey]:filterId}).select('-productImages');
         // console.log(newRegistration)
         categoryList = await categoryModel.find({}).select('-categoryImage');
-        let passedData = newRegistration.map(({_id,productName,productOldPrice,productCurrentPrice,productRating,productInStock,productBrand,productImages,categoryId,productDiscount}) => {
+        let passedData = newRegistration.map(({_id,productName,productOldPrice,productCurrentPrice,productRating,productInStock,productBrand,productImages,categoryId,productDiscount,description}) => {
             assignedCategoryData = categoryList.find(value =>  value._id.equals(categoryId));
             return {
                 id: _id,
@@ -67,6 +67,7 @@ const getallProduts = async(req,res) => {
                 productInStock,
                 productBrand,
                 productImages,
+                description,
                 categoryName: assignedCategoryData.categoryName,
                 categoryId: assignedCategoryData._id,
                 assignedCategoryData
@@ -123,5 +124,17 @@ const getParticularProduct = async(req,res) => {
     }
 }
 
+const updateProductData = async(req,res) => {
+    try {
+        const productId = req.params.id;
+        // console.log(req.fields)
+        const productData = await productModel.findOneAndUpdate({_id: productId }, req.fields);
+        // console.log(productData)
+        res.status(200).send(({message: "product data updated"}))
+    } catch (error) {
+        console.log(error)
+    }
+}
 
-export {createNewProduct, getallProduts,getProductImage,getParticularProduct}
+
+export {createNewProduct, getallProduts,getProductImage,getParticularProduct,updateProductData}

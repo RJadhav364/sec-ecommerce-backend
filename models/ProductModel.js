@@ -61,6 +61,10 @@ const productScheme = new Schema({
     isPopular: {
         type: Boolean,
         required: true, 
+    },
+    description: {
+        type: String,
+        require: true
     }
 });
 
