@@ -8,7 +8,6 @@ const customerScheme = new Schema({
     username: {
         type: String,
         required: true,
-        unique: true
     },
     email: {
         type: String,
@@ -19,9 +18,26 @@ const customerScheme = new Schema({
         type: String,
         required: true, 
     },
+    address: {
+        type: String,
+    },
+
 });
 
 
+customerScheme.methods.generateToken = async function (payload){
+        try{
+            // console.log(process.env.JWTKEY)
+            return jwt.sign(payload,
+                process.env.JWTKEY,{
+                    expiresIn: "1d",
+                }
+            )
+        } catch(err){
+            console.log(err)
+        }
+}
 const customerModel = mongoose.model('customer', customerScheme);
+
 
 export default customerModel;
