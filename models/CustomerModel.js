@@ -30,7 +30,7 @@ customerScheme.methods.generateToken = async function (payload){
             // console.log(process.env.JWTKEY)
             return jwt.sign(payload,
                 process.env.JWTKEY,{
-                    expiresIn: "1d",
+                    expiresIn: "1m",
                 }
             )
         } catch(err){
