@@ -5,7 +5,7 @@ const Schema =  mongoose.Schema;
 
 const wishListSchema = new Schema({
     wishList: {
-        type: String,
+        type: Object,
         required: true,
     },
     productId: {
