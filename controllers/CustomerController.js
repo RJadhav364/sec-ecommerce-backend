@@ -1,6 +1,7 @@
 import "../config/dotenv.js"
 import { compareHashPassword, convertPasswordToHash } from "../middlewar/passwordHashing.js";
 import customerModel from "../models/customerModel.js"
+import wishListModel from "../models/CustomerWishListModel.js";
 
 const createNewCustomer = async(req,res) => {
     try {
@@ -26,7 +27,8 @@ const createNewCustomer = async(req,res) => {
 const customerLogin = async(req,res) => {
     try {
         const findCredentialsDB = await customerModel.findOne({email: req.body.email});
-        console.log(findCredentialsDB)
+        // console.log(findCredentialsDB)
+        let wishListcount;
         switch(true){
             case findCredentialsDB == null:
                 res.status(404).send({message: "Customer not found"});
@@ -35,16 +37,18 @@ const customerLogin = async(req,res) => {
                 const passwordResult = await compareHashPassword(req.body.password , findCredentialsDB.password)
                 switch(true){
                     case passwordResult == true:
+                        wishListcount = await wishListModel.countDocuments({userId: findCredentialsDB._id});
                         const payload = {
                             id: findCredentialsDB._id,
                             email: findCredentialsDB.email,
-                            username: findCredentialsDB.username
+                            username: findCredentialsDB.username,
                         };
                         res.status(200).send({message: "Customer Logged In", data: {
                             token: await findCredentialsDB.generateToken(payload),
                             id: findCredentialsDB._id,
                             email: findCredentialsDB.email,
-                            username: findCredentialsDB.username
+                            username: findCredentialsDB.username,
+                            wishList: wishListcount
                         }})
                         break;
                     default:

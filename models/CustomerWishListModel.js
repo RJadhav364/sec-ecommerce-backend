@@ -12,6 +12,10 @@ const wishListSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "ecommerce",
     },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "customer",
+    }
 },
 { timestamps: true }
 );
