@@ -22,7 +22,7 @@ const customerScheme = new Schema({
         type: Object,
     },
     customeProfilePic: {
-        data: Buffer,
+        type: String,
         contentType:String,
     }
 
