@@ -19,8 +19,12 @@ const customerScheme = new Schema({
         required: true, 
     },
     address: {
-        type: String,
+        type: Object,
     },
+    customeProfilePic: {
+        data: Buffer,
+        contentType:String,
+    }
 
 });
 
