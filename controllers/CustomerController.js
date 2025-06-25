@@ -50,6 +50,7 @@ const customerLogin = async(req,res) => {
                             id: findCredentialsDB._id,
                             email: findCredentialsDB.email,
                             username: findCredentialsDB.username,
+                            customeProfilePic: findCredentialsDB?.customeProfilePic,
                         }})
                         break;
                     default:
