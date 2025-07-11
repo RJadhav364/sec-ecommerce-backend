@@ -45,17 +45,17 @@ const getallProduts = async(req,res) => {
     let filterId;
     let thirdLevelCategory;
     try {
-        // console.log("HI", req.params.id);
-        params = req.params.id;
-        params = params.split("=");
-        // console.log(params)
-        filterKey = params[0];
-        filterId = params[1]
+        console.log("HI", req.body);
+        // params = req.params.id;
+        // params = params.split("=");
+        // // console.log(params)
+        // filterKey = params[0];
+        // filterId = params[1]
         // console.log(filterId)
-        const newRegistration = await productModel.find({[filterKey]:filterId}).select('-productImages');
+        const getAllProduct = await productModel.find(req.body).select('-productImages');
         // console.log(newRegistration)
         categoryList = await categoryModel.find({}).select('-categoryImage');
-        let passedData = newRegistration.map(({_id,productName,productOldPrice,productCurrentPrice,productRating,productInStock,productBrand,productImages,categoryId,productDiscount,description}) => {
+        let passedData = getAllProduct.map(({_id,productName,productOldPrice,productCurrentPrice,productRating,productInStock,productBrand,productImages,categoryId,productDiscount,description}) => {
             assignedCategoryData = categoryList.find(value =>  value._id.equals(categoryId));
             return {
                 id: _id,
@@ -73,7 +73,7 @@ const getallProduts = async(req,res) => {
                 assignedCategoryData
             }
         })
-        res.status(200).send({message: "HI, THIS API TO TEST GIT FLOW", passedData})
+        res.status(200).send({message: "HI, THIS API TO TEST GIT FLOW", data: passedData})
     } catch (error) {
         console.log(error)
         res.send({message: "error occured", error})
