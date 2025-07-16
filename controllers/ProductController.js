@@ -40,18 +40,8 @@ const createNewProduct = async(req,res) => {
 const getallProduts = async(req,res) => {
     let categoryList;
     let assignedCategoryData;
-    let params;
-    let filterKey;
-    let filterId;
-    let thirdLevelCategory;
     try {
-        console.log("HI", req.body);
-        // params = req.params.id;
-        // params = params.split("=");
-        // // console.log(params)
-        // filterKey = params[0];
-        // filterId = params[1]
-        // console.log(filterId)
+        // console.log("HI", req.body);
         const getAllProduct = await productModel.find(req.body).select('-productImages');
         // console.log(newRegistration)
         categoryList = await categoryModel.find({}).select('-categoryImage');
