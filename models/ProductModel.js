@@ -47,12 +47,12 @@ const productScheme = new Schema({
     subCategoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "subcategory",
-        required: true,
+        // required: true,
     },
     thirdLevelcategoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "thirdlevelcategory",
-        required: true,
+        // required: true,
     },
     isFeatured: {
         type: Boolean,
