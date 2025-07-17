@@ -43,7 +43,7 @@ const getallProduts = async(req,res) => {
     try {
         // console.log("HI", req.body);
         const getAllProduct = await productModel.find(req.body).select('-productImages');
-        // console.log(newRegistration)
+        // console.log(getAllProduct)
         categoryList = await categoryModel.find({}).select('-categoryImage');
         let passedData = getAllProduct.map(({_id,productName,productOldPrice,productCurrentPrice,productRating,productInStock,productBrand,productImages,categoryId,productDiscount,description}) => {
             assignedCategoryData = categoryList.find(value =>  value._id.equals(categoryId));
