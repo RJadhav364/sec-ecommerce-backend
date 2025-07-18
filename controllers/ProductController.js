@@ -41,8 +41,8 @@ const getallProduts = async(req,res) => {
     let categoryList;
     let assignedCategoryData;
     try {
-        // console.log("HI", req.body);
-        const getAllProduct = await productModel.find(req.body).select('-productImages');
+        console.log("HI", req.body.categoryId);
+        const getAllProduct = await productModel.find(req.body.categoryId.length == 0 ? {} : req.body).select('-productImages');
         // console.log(getAllProduct)
         categoryList = await categoryModel.find({}).select('-categoryImage');
         let passedData = getAllProduct.map(({_id,productName,productOldPrice,productCurrentPrice,productRating,productInStock,productBrand,productImages,categoryId,productDiscount,description}) => {
