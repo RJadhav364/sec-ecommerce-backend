@@ -9,6 +9,7 @@ import homeSliderController from "./routes/HomeSliderRoute.js";
 import thirdLevelCategoryController from "./routes/ThirdLevelCategoryRoutes.js";
 import customerController from "./routes/CustomerRoutes.js";
 import wishListController from "./routes/wishLIstRoutes.js";
+import adminController from "./routes/AdminRoutes.js";
 
 const app = express();
 const PORT = 9000;
@@ -29,6 +30,7 @@ app.use("/thirdlevel-category", thirdLevelCategoryController)
 app.use("/slider", homeSliderController)
 app.use("/customer", customerController)
 app.use("/favourite", wishListController)
+app.use("/", adminController)
 app.listen(PORT, () => {
     console.log(`app is running on PORT ${PORT}`);
 })

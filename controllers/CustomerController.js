@@ -11,7 +11,6 @@ const createNewCustomer = async(req,res) => {
         const {password, ...values} = req.body;
         const passwordConversion = await convertPasswordToHash(password);
         const mergeObject = {password: passwordConversion, ...values};
-        // console.log(mergeObject);
         const newRegistration = await customerModel.create(mergeObject);
         res.status(200).send({message: "New customer created"})
     } catch (error) {
