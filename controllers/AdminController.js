@@ -1,4 +1,4 @@
-import { convertPasswordToHash } from "../middlewar/passwordHashing.js";
+import { compareHashPassword, convertPasswordToHash } from "../middlewar/passwordHashing.js";
 import adminModel from "../models/AdminModel.js";
 
 const createNewSubAdmin = async (req, res) => {
@@ -19,4 +19,40 @@ const createNewSubAdmin = async (req, res) => {
     }
 }
 
-export {createNewSubAdmin}
+const adminLogin = async (req, res) => {
+    try {
+        const findAdminCredentials = await adminModel.findOne({ email: req.body.email });
+        switch (true) {
+            case !findAdminCredentials:
+                res.status(404).json({ message: "Email not found" });
+            default:
+                const passwordResult = await compareHashPassword(req.body.password, findAdminCredentials.password)
+                switch (true) {
+                    case passwordResult:
+                        const payload = {
+                            id: findAdminCredentials._id,
+                            email: findAdminCredentials.email,
+                            username: findAdminCredentials.username,
+                            role: findAdminCredentials.role
+                        };
+                        res.status(200).send({
+                            message: "Login Successful", data: {
+                                token: await findAdminCredentials.generateToken(payload),
+                                ...payload
+                            }
+                        })
+                        break;
+                    default:
+                        res.status(401).send({ message: "Password mismatch" });
+                }
+        }
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+            error: error.message
+        });
+    }
+}
+
+export { createNewSubAdmin, adminLogin }
