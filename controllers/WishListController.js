@@ -1,6 +1,7 @@
 import "../config/dotenv.js";
 import verifyJWTToken from "../middlewar/verifyToken.js";
 import wishListModel from "../models/CustomerWishListModel.js";
+import productModel from "../models/ProductModel.js";
 
 
 const addinWishList = async(req,res) => {
@@ -14,11 +15,12 @@ const addinWishList = async(req,res) => {
         switch(true){
             case tokenResult.result == "true":
                 productInList = await wishListModel.find({productId: req.body.id , userId: req.body.userId})
-                // console.log("productInList",productInList)
                 if(productInList.length > 0){
                     res.status(409).send({message: "Product exist in Cart"});
                 } else{
-                    const wishListResult = await wishListModel.create({wishList: req.body , productId: req.body.id, userId: req.body.userId});
+                    const productDetails = await productModel.findById(req.body.id);
+                    // console.log("productDetails",productDetails);
+                    const wishListResult = await wishListModel.create({wishList: productDetails , productId: req.body.id, userId: req.body.userId});
                     // console.log("wishListResult",wishListResult)
                     res.status(200).send({message: "Product added in wish list"});
                 }
