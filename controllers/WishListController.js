@@ -38,15 +38,15 @@ const getAllFavouriteProducts = async(req,res) => {
         if(headersToken){
         const token  = headersToken.split(" ")[1];
         const tokenResult = await verifyJWTToken(token);
-            switch(true){
-                case tokenResult.result == "true":
+            // switch(true){
+            //     case tokenResult.result == "true":
                     productInList = await wishListModel.find({userId: req.params.id})
                     // console.log("productInList",productInList.length)
                     res.status(200).send({message: "Products In Cart" , data: productInList});
-                    break;
-                default:
-                    res.status(403).send({message: "Token has expired"});
-            }
+            //         break;
+            //     default:
+            //         res.status(403).send({message: "Token has expired"});
+            // }
         } else{
         res.status(498).send({message: "Token not found"})
         }
