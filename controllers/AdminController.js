@@ -1,5 +1,8 @@
 import { compareHashPassword, convertPasswordToHash } from "../middlewar/passwordHashing.js";
+import verifyJWTToken from "../middlewar/verifyToken.js";
 import adminModel from "../models/AdminModel.js";
+import productModel from "../models/ProductModel.js";
+import throwError from "../utils/throwError.js";
 
 const createNewSubAdmin = async (req, res) => {
     try {
@@ -55,4 +58,26 @@ const adminLogin = async (req, res) => {
     }
 }
 
-export { createNewSubAdmin, adminLogin }
+const getAllProducts = async (req, res) => {
+    try {
+        const headersToken = req.headers['authorization'];
+        if (headersToken) {
+            const token = headersToken.split(" ")[1];
+            const tokenResult = await verifyJWTToken(token);
+            switch (true) {
+                case tokenResult.result == "true":
+                    const getAllProduct = await productModel.find(req.body.categoryId == "all" ? {} : req.body).select('-productImages');
+                    res.status(200).send({ message: "Product Listing", data: getAllProduct })
+                    break;
+                default:
+                    throwError("Token has expired", 403);
+            }
+        } else {
+            throwError("Token not found", 498);
+        }
+    } catch (error) {
+        res.status(error.statusCode).send({ message: error.message })
+    }
+}
+
+export { createNewSubAdmin, adminLogin, getAllProducts }
