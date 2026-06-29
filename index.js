@@ -11,6 +11,7 @@ import customerController from "./routes/CustomerRoutes.js";
 import wishListController from "./routes/wishLIstRoutes.js";
 import adminController from "./routes/AdminRoutes.js";
 import CartProductController from "./routes/CartListRoutes.js";
+import productReviewController from "./routes/ProductReviewRoute.js";
 // import errorHandler from "./middlewar/errorHandler.js";
 
 const app = express();
@@ -33,6 +34,7 @@ app.use("/slider", homeSliderController)
 app.use("/customer", customerController)
 app.use("/favourite", wishListController)
 app.use("/cart", CartProductController)
+app.use("/review", productReviewController)
 app.use("/", adminController)
 // app.use(errorHandler);
 app.listen(PORT, () => {
