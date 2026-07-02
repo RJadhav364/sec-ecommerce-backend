@@ -1,7 +1,9 @@
 import "../config/dotenv.js"
 import categoryModel from "../models/CategoryModel.js";
 import productModel from "../models/ProductModel.js"
+import productReviewModel from "../models/ProductReviewModel.js"
 import fs from "fs"
+import { getReviewsWithProfilePic } from "../utils/getProductReviewWithCustInfo.js";
 const createNewProduct = async(req,res) => {
     try {
         let newProductObj = req.fields;
@@ -97,6 +99,7 @@ const getParticularProduct = async(req,res) => {
         let base64Image;
         const productId = req.params.id;
         const productData = await productModel.findById({_id: productId }).lean();
+        const getProductReview = await getReviewsWithProfilePic(productId );
         // const data = await productModel.findById({_id: productId }).select("-productImages");
         // console.log(data.productImages)
         const images = productData.productImages.map(({data,contentType},index) => {
@@ -106,7 +109,7 @@ const getParticularProduct = async(req,res) => {
         })
         const {productImages, ...restValues} = productData;
         // console.log("restValues",restValues);
-        const data = {images, ...restValues}
+        const data = {images,getProductReview, ...restValues}
         // console.log(abc.length)
         res.status(200).send({message: "Product fetch successfullu", data})
     } catch (error) {

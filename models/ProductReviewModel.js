@@ -10,7 +10,15 @@ const productReviewScheme = new Schema({
     required: true,
   },
   productID: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "ecommerce",
+    unique: true,
+    required: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "customer",
+    unique: true,
     required: true,
   },
   reviewerName: {
@@ -28,6 +36,7 @@ const productReviewScheme = new Schema({
 },{
     timestamps: true,
   });
+
 
 const productReviewModel = mongoose.model("productReview", productReviewScheme);
 
