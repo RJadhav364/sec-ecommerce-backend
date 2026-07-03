@@ -3,6 +3,7 @@ import verifyJWTToken from "../middlewar/verifyToken.js";
 import productModel from "../models/ProductModel.js";
 import productReviewModel from "../models/ProductReviewModel.js";
 import customerModel from "../models/customerModel.js";
+import conflictError from "../utils/conflictError.js";
 import { getReviewsWithProfilePic } from "../utils/getProductReviewWithCustInfo.js";
 import throwError from "../utils/throwError.js";
 
@@ -21,14 +22,14 @@ const createNewProductReview = async (req, res) => {
           const productDetails = await productModel
             .findOne({ _id: req.body.productId })
             .select("productName");
-          productInList = await productReviewModel.create({
+          productDetails != null ? productInList = await productReviewModel.create({
             productName: productDetails.productName,
             productID: req.body.productId,
             userId: req.body.userId,
             reviewerName: userDetails.username,
             description: req.body.description,
             productRating: String(req.body.stars),
-          });
+          }): throwError("Product not found", 404);
           // console.log("wishListResult",wishListResult)
           res.status(200).send({ message: "Review submitted successfully" });
           break;
@@ -39,14 +40,15 @@ const createNewProductReview = async (req, res) => {
       res.status(498).send({ message: "Token not found" });
     }
   } catch (error) {
-    switch (true) {
+    switch(true){
       case error.errorResponse && error.errorResponse.keyPattern.productID == 1:
-        // res.status(409).send({ message: "Email ID already exist" });
-        throwError("You have already reviewed this product", 409);
+        conflictError(409,"You have already reviewed this product");
         break;
       default:
-        res.status(400).send({ message: "Something went wrong" });
+        res.status(error.statusCode).send({ message: error.message })
+        break;
     }
+    // throwError("You have already reviewed this product", 409);
   }
 };
 
